@@ -54,9 +54,9 @@ module.exports = function (config) {
     },
     exclude: [],
     port: 8080,
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_ERROR,
     colors: true,
-    autoWatch: false,
+    autoWatch: true,
     // Start these browsers, currently available:
     // - Chrome
     // - ChromeCanary

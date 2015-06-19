@@ -9,7 +9,7 @@ describe('WinemineApp', function () {
     container.id = 'content';
     document.body.appendChild(container);
 
-    WinemineApp = require('components/WinemineApp.js');
+    WinemineApp = require('components/WinemineApp.jsx');
     component = React.createElement(WinemineApp);
   });
 

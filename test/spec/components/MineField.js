@@ -6,7 +6,7 @@ describe('MineField', function () {
 
   beforeEach(function () {
     MineField = require('components/MineField.jsx');
-    component = React.createElement(MineField);
+    component = React.createElement(MineField, { rows: 3, columns: 2, bombs: 3 });
   });
 
   it('should create a new instance of MineField', function () {

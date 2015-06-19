@@ -11,7 +11,8 @@
   "mainOutput": "main",
   "dependencies": {
     "react": "~0.13.0",
-    "normalize.css": "~3.0.3"
+    "normalize.css": "~3.0.3",
+    "lodash": "~3.9.3"
   },
   "devDependencies": {
     "grunt": "~0.4.5",
