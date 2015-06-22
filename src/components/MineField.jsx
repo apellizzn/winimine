@@ -42,6 +42,7 @@ var MineField = React.createClass({
 
   propagate: function(coordinates){
     console.log("FLIP : "+ coordinates.row + " " + coordinates.column);
+    var currentCell =  this.refs[coordinates.row + "" + coordinates.column ];
     var filterBy = [];
     for(var row = coordinates.row - 1; row <= coordinates.row + 1; row ++ ){
       for(var column = coordinates.column - 1; column <= coordinates.column + 1; column ++ ){
@@ -50,14 +51,22 @@ var MineField = React.createClass({
       }
     }
 
-    this.refs[coordinates.row + "" + coordinates.column ].state.flipped = true;
+    currentCell.state.flipped = true;
+    
+    var adjacent = _.filter(this.refs, function(cell){
+      return _.some(filterBy, { row: cell.props.row, column: cell.props.column});
+    });
 
+    var points =  _.sum(adjacent, function(cell) { return cell.props.isBomb ? 1 : 0;});
+    
+    currentCell.setState({points: points});
+    
     _.map(
-      _.filter(this.refs, function(cell) {
+      _.filter(adjacent, function(cell) {
           return _.some(filterBy, { row: cell.props.row, column: cell.props.column}) && !cell.state.flipped;
         }
       ), function(component){ 
-        if(!component.state.flipped){
+        if(!component.state.flipped && !component.props.isBomb){
           component.state.flipped = true;
           component.flip();
         }
