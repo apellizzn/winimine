@@ -10,7 +10,7 @@ var Paper = mui.Paper;
 var TextField = mui.TextField;
 var FlatButton = mui.FlatButton;
 var Dialog = mui.Dialog;
-var MineField = require('./MineField.jsx');
+var MineField = require('./MineField.js');
 // CSS
 require('normalize.css');
 require('../styles/main.css');
@@ -18,7 +18,7 @@ require('../styles/main.css');
 var imageURL = require('../images/yeoman.png');
 
 var WinemineApp = React.createClass({
-	getChildContext() { 
+  getChildContext() { 
     return {
       muiTheme: ThemeManager.getCurrentTheme()
     };
@@ -35,9 +35,9 @@ var WinemineApp = React.createClass({
   },
 
   getInitialProps: function(){
-  	return {
-  		rows: 0, collumns: 0, bombs: 0
-  	};
+    return {
+      rows: 0, collumns: 0, bombs: 0
+    };
   },
 
   lost: function(){
@@ -45,10 +45,10 @@ var WinemineApp = React.createClass({
   },
 
   createMineField: function(){
-  	var rows = Number($('input[name=rows]').val());
-  	var collumns = Number($('input[name=collumns]').val());
-  	var bombs = Number($('input[name=bombs]').val());
-  	this.setProps({ rows: rows, collumns: collumns, bombs: bombs })
+    var rows = Number($('input[name=rows]').val());
+    var collumns = Number($('input[name=collumns]').val());
+    var bombs = Number($('input[name=bombs]').val());
+    this.setProps({ rows: rows, collumns: collumns, bombs: bombs })
   },
 
   render: function() {
@@ -76,12 +76,12 @@ var WinemineApp = React.createClass({
         <div className='main'>
           <AppBar title='Title' style={{visibility: 'hidden'}} iconClassNameRight="muidocs-icon-navigation-expand-more"/>
           <Paper zDepth={1}>
-    				<TextField name="collumns" hintText="Collumns" value="3" style={{visibility: 'block'}}/>
-    				<TextField name="rows" hintText="Rows" value="3" style={{visibility: 'block'}} />
-    				<TextField name="bombs" hintText="Bombs" value="2" style={{visibility: 'block'}}/>
-    				<FlatButton onClick={this.createMineField} label="Play" secondary={true} />
+            <TextField name="collumns" hintText="Collumns" style={{visibility: 'block'}}/>
+            <TextField name="rows" hintText="Rows" style={{visibility: 'block'}} />
+            <TextField name="bombs" hintText="Bombs" style={{visibility: 'block'}}/>
+            <FlatButton onClick={this.createMineField} label="Play" secondary={true} />
           </Paper>
-    			<MineField onLost={this.lost} rows={this.props.rows} collumns={this.props.collumns} bombs={this.props.bombs}/>
+          <MineField onLost={this.lost} rows={this.props.rows} collumns={this.props.collumns} bombs={this.props.bombs}/>
         </div>
       );
     }

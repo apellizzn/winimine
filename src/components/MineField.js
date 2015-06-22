@@ -1,7 +1,7 @@
 +'use strict';
 
 var React = require('react/addons');
-var Cell = require('./Cell.jsx');
+var Cell = require('./Cell.js');
 var _ = require('lodash');
 var mui = require('material-ui');
 var Dialog = mui.Dialog;
@@ -41,7 +41,6 @@ var MineField = React.createClass({
   },
 
   propagate: function(coordinates){
-    console.log("FLIP : "+ coordinates.row + " " + coordinates.column);
     var currentCell =  this.refs[coordinates.row + "" + coordinates.column ];
     var filterBy = [];
     for(var row = coordinates.row - 1; row <= coordinates.row + 1; row ++ ){
@@ -59,14 +58,15 @@ var MineField = React.createClass({
 
     var points =  _.sum(adjacent, function(cell) { return cell.props.isBomb ? 1 : 0;});
     
-    currentCell.setState({points: points});
+    currentCell.setState({content: points > 0 ? points: 'E'});
+    if(points > 0) return;
     
     _.map(
       _.filter(adjacent, function(cell) {
           return _.some(filterBy, { row: cell.props.row, column: cell.props.column}) && !cell.state.flipped;
         }
       ), function(component){ 
-        if(!component.state.flipped && !component.props.isBomb){
+        if(!component.state.flipped){
           component.state.flipped = true;
           component.flip();
         }
@@ -82,11 +82,11 @@ var MineField = React.createClass({
     _.times(this.props.rows, function(n) {
         var tableCells = [];
         _.times(self.props.collumns, function(k){
-          tableCells.push(<td><Cell ref={n+""+k} key={n-k} flipped={false} propagate={self.propagate} row={n} column={k} onLost={self.props.onLost} isBomb={_.some(bombsCoordinates, { row: n , column: k})}/></td>);
+          tableCells.push(<td><Cell ref={n+""+k} key={n} flipped={false} propagate={self.propagate} row={n} column={k} onLost={self.props.onLost} isBomb={_.some(bombsCoordinates, { row: n , column: k})}/></td>);
         });
         tableRows.push(<tr>{tableCells}</tr>) 
     });
-    return (<table >{tableRows}</table>);
+    return (<table className="field">{tableRows}</table>);
   },
 
   isValid: function (){

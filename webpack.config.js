@@ -17,9 +17,9 @@ module.exports = {
   cache: true,
   debug: true,
   devtool: false,
-  entry: [
+  entry:[
       'webpack/hot/only-dev-server',
-      './src/components/WinemineApp.jsx'
+      './src/components/WinemineApp.js'
   ],
 
   stats: {
