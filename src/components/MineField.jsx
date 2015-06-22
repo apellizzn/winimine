@@ -1,4 +1,4 @@
-'use strict';
++'use strict';
 
 var React = require('react/addons');
 var Cell = require('./Cell.jsx');
@@ -20,13 +20,13 @@ var MineField = React.createClass({
   },
 
   createCoordinates: function(rowValues, collumnsValues){
-    var result = [];
+    var coordinates = [];
     rowValues.forEach(function(row){
       collumnsValues.forEach(function(column){
-        result.push({row: row, column: column})
+        coordinates.push({row: row, column: column})
       });
     });
-    return result;
+    return coordinates;
   },
 
   getCoordinates: function(){
@@ -40,16 +40,44 @@ var MineField = React.createClass({
     return _.sample(this.getCoordinates(), this.props.bombs);
   },
 
-  buildField: function(){
+  propagate: function(coordinates){
+    console.log("FLIP : "+ coordinates.row + " " + coordinates.column);
+    var filterBy = [];
+    for(var row = coordinates.row - 1; row <= coordinates.row + 1; row ++ ){
+      for(var column = coordinates.column - 1; column <= coordinates.column + 1; column ++ ){
+        var candidate = {row: row, column: column};
+        if(candidate.row !== coordinates.row || candidate.column !== coordinates.column) filterBy.push(candidate);
+      }
+    }
+
+    this.refs[coordinates.row + "" + coordinates.column ].state.flipped = true;
+
+    _.map(
+      _.filter(this.refs, function(cell) {
+          return _.some(filterBy, { row: cell.props.row, column: cell.props.column}) && !cell.state.flipped;
+        }
+      ), function(component){ 
+        if(!component.state.flipped){
+          component.state.flipped = true;
+          component.flip();
+        }
+      }
+    );
+  },
+
+  generateField: function(){
     var self = this;
-    var bombsCoordinates = this.generateBombsPositions();
     var result = [];
+    var bombsCoordinates = this.generateBombsPositions();
+    var tableRows = [];
     _.times(this.props.rows, function(n) {
+        var tableCells = [];
         _.times(self.props.collumns, function(k){
-          result.push(<div className="cell"><Cell key={n+" "+k} onLost={self.props.onLost} isBomb={_.some(bombsCoordinates, { row: n , column: k})}/></div>);
-        }); 
+          tableCells.push(<td><Cell ref={n+""+k} key={n-k} flipped={false} propagate={self.propagate} row={n} column={k} onLost={self.props.onLost} isBomb={_.some(bombsCoordinates, { row: n , column: k})}/></td>);
+        });
+        tableRows.push(<tr>{tableCells}</tr>) 
     });
-    return (<div className="field">{result}</div>);
+    return (<table >{tableRows}</table>);
   },
 
   isValid: function (){
@@ -63,7 +91,7 @@ var MineField = React.createClass({
   },
 
   render: function () {
-    if(this.isValid()) { return ( this.buildField() ); }
+    if(this.isValid()) { return (this.generateField()); }
     else { return(<h1>Empty</h1>); }
   }
 });
