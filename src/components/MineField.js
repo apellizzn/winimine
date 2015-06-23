@@ -41,26 +41,12 @@ var MineField = React.createClass({
   },
 
   getAdjacentCells: function(coordinates){
-    var result = []
-    _.each(this.refs, function(cell){
-      if(cell.props.row == 0 && cell.props.column == 14) {
-        var now = true;
-      }
-      if(cell.props.row == 1 && cell.props.column == 14) {
-        var now = true;
-      }
-      if(cell.props.row == 1 && cell.props.column == 15) {
-        var now = true;
-      }
 
-      var ok =  ( cell.props.row === coordinates.row - 1 && _.inRange(cell.props.column, coordinates.column - 1 , coordinates.column + 2) ) ||
+    return _.filter(this.refs, function(cell){
+      return  ( cell.props.row === coordinates.row - 1 && _.inRange(cell.props.column, coordinates.column - 1 , coordinates.column + 2) ) ||
               ( cell.props.row === coordinates.row + 1 && _.inRange(cell.props.column, coordinates.column - 1 , coordinates.column + 2) ) ||
               ( cell.props.row === coordinates.row  && (cell.props.column === coordinates.column - 1 || cell.props.column === coordinates.column + 1))
-      if(ok) {
-        result.push(cell);
-      }
     });
-    return result;
   },
 
   propagate: function(coordinates){
