@@ -44,11 +44,23 @@ var WinemineApp = React.createClass({
     this.setState({isLost: true});
   },
 
+  createEasyField: function(){
+    this.setProps({ rows: 9, collumns: 9, bombs: 10 });
+  },
+
+  createMediumField: function(){
+    this.setProps({ rows: 16, collumns: 16, bombs: 40 });
+  },
+
+  createHardField: function(){
+    this.setProps({ rows: 16, collumns: 30, bombs: 99 });
+  },
+
   createMineField: function(){
     var rows = Number($('input[name=rows]').val());
     var collumns = Number($('input[name=collumns]').val());
     var bombs = Number($('input[name=bombs]').val());
-    this.setProps({ rows: rows, collumns: collumns, bombs: bombs })
+    this.setProps({ rows: rows, collumns: collumns, bombs: bombs });
   },
 
   render: function() {
@@ -79,7 +91,9 @@ var WinemineApp = React.createClass({
             <TextField name="collumns" hintText="Collumns" style={{visibility: 'block'}}/>
             <TextField name="rows" hintText="Rows" style={{visibility: 'block'}} />
             <TextField name="bombs" hintText="Bombs" style={{visibility: 'block'}}/>
-            <FlatButton onClick={this.createMineField} label="Play" secondary={true} />
+            <FlatButton onClick={this.createEasyField} label="Easy" secondary={true} />
+            <FlatButton onClick={this.createMediumField} label="Medium" secondary={true} />
+            <FlatButton onClick={this.createHardField} label="Hard" secondary={true} />
           </Paper>
           <MineField onLost={this.lost} rows={this.props.rows} collumns={this.props.collumns} bombs={this.props.bombs}/>
         </div>

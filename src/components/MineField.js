@@ -40,34 +40,43 @@ var MineField = React.createClass({
     return _.sample(this.getCoordinates(), this.props.bombs);
   },
 
-  propagate: function(coordinates){
-    var currentCell =  this.refs[coordinates.row + "" + coordinates.column ];
-    var filterBy = [];
-    for(var row = coordinates.row - 1; row <= coordinates.row + 1; row ++ ){
-      for(var column = coordinates.column - 1; column <= coordinates.column + 1; column ++ ){
-        var candidate = {row: row, column: column};
-        if(candidate.row !== coordinates.row || candidate.column !== coordinates.column) filterBy.push(candidate);
+  getAdjacentCells: function(coordinates){
+    var result = []
+    _.each(this.refs, function(cell){
+      if(cell.props.row == 0 && cell.props.column == 14) {
+        var now = true;
       }
-    }
+      if(cell.props.row == 1 && cell.props.column == 14) {
+        var now = true;
+      }
+      if(cell.props.row == 1 && cell.props.column == 15) {
+        var now = true;
+      }
 
-    currentCell.state.flipped = true;
-    
-    var adjacent = _.filter(this.refs, function(cell){
-      return _.some(filterBy, { row: cell.props.row, column: cell.props.column});
+      var ok =  ( cell.props.row === coordinates.row - 1 && _.inRange(cell.props.column, coordinates.column - 1 , coordinates.column + 2) ) ||
+              ( cell.props.row === coordinates.row + 1 && _.inRange(cell.props.column, coordinates.column - 1 , coordinates.column + 2) ) ||
+              ( cell.props.row === coordinates.row  && (cell.props.column === coordinates.column - 1 || cell.props.column === coordinates.column + 1))
+      if(ok) {
+        result.push(cell);
+      }
     });
+    return result;
+  },
 
-    var points =  _.sum(adjacent, function(cell) { return cell.props.isBomb ? 1 : 0;});
+  propagate: function(coordinates){
+    var currentCell =  this.refs[coordinates.row + "&" + coordinates.column ];
+    var adjacentCells = this.getAdjacentCells(coordinates);
+   
+    currentCell.state.flipped = true; 
+
+    var points =  _.sum(adjacentCells, function(cell) { return cell.props.isBomb ? 1 : 0;});
     
     currentCell.setState({content: points > 0 ? points: 'E'});
+    
     if(points > 0) return;
     
-    _.map(
-      _.filter(adjacent, function(cell) {
-          return _.some(filterBy, { row: cell.props.row, column: cell.props.column}) && !cell.state.flipped;
-        }
-      ), function(component){ 
+    _.map(adjacentCells, function(component){ 
         if(!component.state.flipped){
-          component.state.flipped = true;
           component.flip();
         }
       }
@@ -82,7 +91,7 @@ var MineField = React.createClass({
     _.times(this.props.rows, function(n) {
         var tableCells = [];
         _.times(self.props.collumns, function(k){
-          tableCells.push(<td><Cell ref={n+""+k} key={n} flipped={false} propagate={self.propagate} row={n} column={k} onLost={self.props.onLost} isBomb={_.some(bombsCoordinates, { row: n , column: k})}/></td>);
+          tableCells.push(<td><Cell ref={n+"&"+k} key={n} flipped={false} propagate={self.propagate} row={n} column={k} onLost={self.props.onLost} isBomb={_.some(bombsCoordinates, { row: n , column: k})}/></td>);
         });
         tableRows.push(<tr>{tableCells}</tr>) 
     });
@@ -95,13 +104,9 @@ var MineField = React.createClass({
             && ( this.props.bombs < this.props.rows * this.props.collumns);
   },
 
-  _onDialogSubmit: function(){
-    alert("end");
-  },
-
   render: function () {
     if(this.isValid()) { return (this.generateField()); }
-    else { return(<h1>Empty</h1>); }
+    else { return (<h1>Please enter a valid configuration</h1>); }
   }
 });
 

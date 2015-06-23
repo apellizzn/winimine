@@ -38,7 +38,7 @@ var Cell = React.createClass({
 		}
 		return(
 			<div className={className} onClick={this.state.flipped ? null : this.flip}> 
-				{ content }
+				{ content == null || content == 'E' ? '' : content }
 			</div>
 		);
 	}
