@@ -13,6 +13,12 @@
 			column: React.PropTypes.number
 		},
 
+		getInitialProps: function () {
+			return {
+				flipped: false
+			};
+		},
+
 		getInitialState: function(){
 			return {
 				flipped: false,
@@ -41,7 +47,7 @@
 			}
 			return (
 				<div className={className} onClick={this.state.flipped ? null : this.flip}>
-					{ content === null || content === 'E' ? '' : content }
+					{ content === null || content === -1 ? '' : content }
 				</div>
 			);
 		}

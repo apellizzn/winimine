@@ -643,7 +643,7 @@ function handlePropertyChange(nativeEvent) {
   if (nativeEvent.propertyName !== 'value') {
     return;
   }
-  var value = nativeEvent.srcElement.value;
+  var value = nativeEvent.srcolumnement.value;
   if (value === activeElementValue) {
     return;
   }
@@ -928,7 +928,7 @@ function isFallbackEnd(topLevelType, nativeEvent) {
     case topLevelTypes.topKeyPress:
     case topLevelTypes.topMouseDown:
     case topLevelTypes.topBlur:
-      // Events are not possible without cancelling IME.
+      // Events are not possible without cancolumnling IME.
       return true;
     default:
       return false;
@@ -1842,8 +1842,8 @@ var DefaultDOMPropertyConfig = {
     autoComplete: null,
     autoFocus: HAS_BOOLEAN_VALUE,
     autoPlay: HAS_BOOLEAN_VALUE,
-    cellPadding: null,
-    cellSpacing: null,
+    columnlPadding: null,
+    columnlSpacing: null,
     charSet: MUST_USE_ATTRIBUTE,
     checked: MUST_USE_PROPERTY | HAS_BOOLEAN_VALUE,
     className: MUST_USE_PROPERTY,
@@ -2202,7 +2202,7 @@ var topLevelTypes = keyMirror({
   topScroll: null,
   topSelectionChange: null,
   topSubmit: null,
-  topTouchCancel: null,
+  topTouchCancolumn: null,
   topTouchEnd: null,
   topTouchMove: null,
   topTouchStart: null,
@@ -2740,7 +2740,7 @@ var topLevelTypes = EventConstants.topLevelTypes;
 function isEndish(topLevelType) {
   return topLevelType === topLevelTypes.topMouseUp ||
          topLevelType === topLevelTypes.topTouchEnd ||
-         topLevelType === topLevelTypes.topTouchCancel;
+         topLevelType === topLevelTypes.topTouchCancolumn;
 }
 
 function isMoveish(topLevelType) {
@@ -8175,7 +8175,7 @@ var ReactEventEmitter = merge(ReactEventEmitterMixin, {
       trapBubbledEvent(topLevelTypes.topTouchStart, 'touchstart', mountAt);
       trapBubbledEvent(topLevelTypes.topTouchEnd, 'touchend', mountAt);
       trapBubbledEvent(topLevelTypes.topTouchMove, 'touchmove', mountAt);
-      trapBubbledEvent(topLevelTypes.topTouchCancel, 'touchcancel', mountAt);
+      trapBubbledEvent(topLevelTypes.topTouchCancolumn, 'touchcancolumn', mountAt);
     }
     trapBubbledEvent(topLevelTypes.topKeyUp, 'keyup', mountAt);
     trapBubbledEvent(topLevelTypes.topKeyPress, 'keypress', mountAt);
@@ -12703,10 +12703,10 @@ var eventTypes = {
       captured: keyOf({onSubmitCapture: true})
     }
   },
-  touchCancel: {
+  touchCancolumn: {
     phasedRegistrationNames: {
-      bubbled: keyOf({onTouchCancel: true}),
-      captured: keyOf({onTouchCancelCapture: true})
+      bubbled: keyOf({onTouchCancolumn: true}),
+      captured: keyOf({onTouchCancolumnCapture: true})
     }
   },
   touchEnd: {
@@ -12761,7 +12761,7 @@ var topLevelEventsToDispatchConfig = {
   topPaste:       eventTypes.paste,
   topScroll:      eventTypes.scroll,
   topSubmit:      eventTypes.submit,
-  topTouchCancel: eventTypes.touchCancel,
+  topTouchCancolumn: eventTypes.touchCancolumn,
   topTouchEnd:    eventTypes.touchEnd,
   topTouchMove:   eventTypes.touchMove,
   topTouchStart:  eventTypes.touchStart,
@@ -12773,7 +12773,7 @@ var SimpleEventPlugin = {
   eventTypes: eventTypes,
 
   /**
-   * Same as the default implementation, except cancels the event when return
+   * Same as the default implementation, except cancolumns the event when return
    * value is false.
    *
    * @param {object} Event to be dispatched.
@@ -12844,7 +12844,7 @@ var SimpleEventPlugin = {
       case topLevelTypes.topMouseUp:
         EventConstructor = SyntheticMouseEvent;
         break;
-      case topLevelTypes.topTouchCancel:
+      case topLevelTypes.topTouchCancolumn:
       case topLevelTypes.topTouchEnd:
       case topLevelTypes.topTouchMove:
       case topLevelTypes.topTouchStart:
@@ -13019,7 +13019,7 @@ var EventInterface = {
   currentTarget: null,
   eventPhase: null,
   bubbles: null,
-  cancelable: null,
+  cancolumnable: null,
   timeStamp: function(event) {
     return event.timeStamp || Date.now();
   },
@@ -13084,7 +13084,7 @@ mergeInto(SyntheticEvent.prototype, {
 
   stopPropagation: function() {
     var event = this.nativeEvent;
-    event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
+    event.stopPropagation ? event.stopPropagation() : event.cancolumnBubble = true;
     this.isPropagationStopped = emptyFunction.thatReturnsTrue;
   },
 
@@ -13304,7 +13304,7 @@ var MouseEventInterface = {
   buttons: null,
   relatedTarget: function(event) {
     return event.relatedTarget || (
-      event.fromElement === event.srcElement ?
+      event.fromElement === event.srcolumnement ?
         event.toElement :
         event.fromElement
     );
@@ -14780,7 +14780,7 @@ module.exports = getActiveElement;
  * @return {DOMEventTarget} Target node.
  */
 function getEventTarget(nativeEvent) {
-  var target = nativeEvent.target || nativeEvent.srcElement || window;
+  var target = nativeEvent.target || nativeEvent.srcolumnement || window;
   // Safari may fire events on text nodes (Node.TEXT_NODE is 3).
   // @see http://www.quirksmode.org/js/events_properties.html
   return target.nodeType === 3 ? target.parentNode : target;

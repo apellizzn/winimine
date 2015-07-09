@@ -13,54 +13,55 @@
 			cols: React.PropTypes.number,
 			onLost: React.PropTypes.func
 		},
+
 		getInitialState: function () {
 			return {
-				field: [],
-				rows: 0,
-				cols: 0
+				matrix: []
 			};
 		},
 
 		getAdjacentCells: function(coordinates){
-
-			return _.filter(this.refs, function(cell){
-				return (cell.props.row === coordinates.row - 1 && _.inRange(cell.props.column, coordinates.column - 1, coordinates.column + 2) ) ||
-								(cell.props.row === coordinates.row + 1 && _.inRange(cell.props.column, coordinates.column - 1, coordinates.column + 2) ) ||
-								(cell.props.row === coordinates.row && (cell.props.column === coordinates.column - 1 || cell.props.column === coordinates.column + 1));
+			return _.filter(this.state.matrix, function(cell){
+				return (cell.row === coordinates.row - 1 && _.inRange(cell.column, coordinates.column - 1, coordinates.column + 2) ) ||
+								(cell.row === coordinates.row + 1 && _.inRange(cell.column, coordinates.column - 1, coordinates.column + 2) ) ||
+								(cell.row === coordinates.row && (cell.column === coordinates.column - 1 || cell.column === coordinates.column + 1));
 			});
 		},
 
-		propagate: function(coordinates){
-			var currentCell = this.refs[coordinates.row + '&' + coordinates.column ];
-			var adjacentCells = this.getAdjacentCells(coordinates);
-
-			currentCell.state.flipped = true;
-
-			var points = _.sum(adjacentCells, function(cell) { return cell.props.isBomb ? 1 : 0; });
-
-			currentCell.setState({ content: points > 0 ? points : 'E' });
-
-			if(points > 0) { return; }
-
-			_.map(adjacentCells, function(component){
-					if(!component.state.flipped){
-						component.flip();
-					}
+		flipCells: function (cells) {
+			var self = this;
+			_.map(cells, function(cell){
+					if(!cell.flipped){ self.refs[cell.id].flip(); }
 				}
 			);
 		},
 
+		propagate: function(coordinates){
+			var adjacentCells = this.getAdjacentCells(coordinates);
+			var currentCell = _.find(this.state.matrix, coordinates);
+			currentCell.flipped = true;
+
+			var points = _.sum(adjacentCells, function(cell) { return cell.value; });
+
+			this.refs[currentCell.id].setState({ content: points > 0 ? points : -1 });
+			if(points <= 0) { this.flipCells(adjacentCells); }
+		},
+
 		drawField: function() {
 			var self = this;
-			var matrix = _.chunk(this.props.field, this.props.rows);
 			var tableRows = [];
-			_.each(matrix, function (row, rowIndex) {
-				var tableCells = [];
-				_.each(row, function (cell, celIndex ) {
-					tableCells.push(<td><Cell ref={rowIndex + '&' + celIndex} key={self.key + rowIndex + '&' + celIndex} flipped={false} propagate={self.propagate} row={rowIndex} column={celIndex} onLost={self.props.onLost} isBomb={cell}/></td>);
-				});
-				tableRows.push(<tr>{tableCells}</tr>);
-			});
+			var table = _.chunk(this.props.field, this.props.rows);
+			_.each(table, function (cells, rowIndex) {
+					var tableCells = [];
+					_.each(cells, function (value, celIndex) {
+						var id = rowIndex + '&' + celIndex;
+						var el = <Cell ref={id} key={self.key + id} propagate={self.propagate} row={rowIndex} column={celIndex} onLost={self.props.onLost} isBomb={value}/>;
+						tableCells.push(<td>{ el }</td>);
+						self.state.matrix.push({ value: value, row: rowIndex, column: celIndex, flipped: false, id: id });
+					});
+					tableRows.push(<tr>{tableCells}</tr>);
+				}
+			);
 			return (<table className="field">{tableRows}</table>);
 		},
 
