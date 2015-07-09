@@ -1,5 +1,5 @@
 {
-  "name": "winemine",
+  "name": "winimine",
   "version": "0.0.0",
   "description": "",
   "repository": "",
@@ -7,7 +7,7 @@
   "src": "src",
   "test": "test",
   "dist": "dist",
-  "mainInput": "WinemineApp",
+  "mainInput": "WinimineApp",
   "mainOutput": "main",
   "dependencies": {
     "react": "~0.13.0",

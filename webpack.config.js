@@ -19,7 +19,7 @@ module.exports = {
   devtool: false,
   entry:[
       'webpack/hot/only-dev-server',
-      './src/components/WinemineApp.js'
+      './src/components/WinimineApp.js'
   ],
 
   stats: {

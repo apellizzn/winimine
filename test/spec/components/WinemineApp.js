@@ -1,19 +1,19 @@
 'use strict';
 
-describe('WinemineApp', function () {
+describe('WinimineApp', function () {
   var React = require('react/addons');
-  var WinemineApp, component;
+  var WinimineApp, component;
 
   beforeEach(function () {
     var container = document.createElement('div');
     container.id = 'content';
     document.body.appendChild(container);
 
-    WinemineApp = require('components/WinemineApp.jsx');
-    component = React.createElement(WinemineApp);
+    WinimineApp = require('components/WinimineApp.jsx');
+    component = React.createElement(WinimineApp);
   });
 
-  it('should create a new instance of WinemineApp', function () {
+  it('should create a new instance of WinimineApp', function () {
     expect(component).toBeDefined();
   });
 });

@@ -18,7 +18,7 @@ module.exports = {
 
   debug: false,
   devtool: false,
-  entry: './src/components/WinemineApp.js',
+  entry: './src/components/WinimineApp.js',
 
   stats: {
     colors: true,

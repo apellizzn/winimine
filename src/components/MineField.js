@@ -52,16 +52,15 @@
 			var tableRows = [];
 			var table = _.chunk(this.props.field, this.props.rows);
 			_.each(table, function (cells, rowIndex) {
-					var tableCells = [];
-					_.each(cells, function (value, celIndex) {
-						var id = rowIndex + '&' + celIndex;
-						var el = <Cell ref={id} key={self.key + id} propagate={self.propagate} row={rowIndex} column={celIndex} onLost={self.props.onLost} isBomb={value}/>;
-						tableCells.push(<td>{ el }</td>);
-						self.state.matrix.push({ value: value, row: rowIndex, column: celIndex, flipped: false, id: id });
-					});
-					tableRows.push(<tr>{tableCells}</tr>);
-				}
-			);
+				var tableCells = [];
+				_.each(cells, function (value, celIndex) {
+					var id = rowIndex + '&' + celIndex;
+					var el = <Cell ref={id} key={self.key + id} propagate={self.propagate} row={rowIndex} column={celIndex} onLost={self.props.onLost} isBomb={value}/>;
+					tableCells.push(<td>{ el }</td>);
+					self.state.matrix.push({ value: value, row: rowIndex, column: celIndex, flipped: false, id: id });
+				});
+				tableRows.push(<tr>{tableCells}</tr>);
+			});
 			return (<table className="field">{tableRows}</table>);
 		},
 
