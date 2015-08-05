@@ -30,13 +30,14 @@
 			if(!this.props.isBomb){
 				this.props.propagate({ row: this.props.row, column: this.props.column});
 			} else {
-				this.props.onLost();
+				this.setState({flipped: true});
+				setTimeout(this.props.onLost, 500);
 			}
 		},
 
 		render: function () {
-			var content = this.state.content != null ? this.state.content : null;
-			content = this.props.isBomb ? 'B' : content;
+			var content = this.state.content;
+			if(this.props.isBomb > 0 && this.state.flipped){ content = 'B'; }
 			var className = 'cell ';
 			if(content === null || content === '+') {
 				className += 'empty';
